@@ -1,0 +1,60 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Group Chat</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var socket = io.connect();
+                //listen load_history first, get history messages after entering name. 
+                socket.on('load_history', function(data){
+                    var htmlStr = '';
+                    for(var i = 0; i < data.users.length;i++){
+                        htmlStr += "<p>" + data.users[i] +": " + data.messages[i] + '</p>';
+                    }
+                    $('#chatroom').html(htmlStr);
+                })
+                var name = prompt('Your name:');
+                if(name){
+                    socket.emit('got_a_new_user',{name:name});
+                }
+                socket.on('new_user',function(data){
+                    alert(data.response);
+                    var htmlStr = '';
+                })
+                $('form').submit(function(e){
+                    e.preventDefault();
+                    info = {
+                        name:name,
+                        message : $('#message').val()
+        
+                    }
+                    socket.emit('got_a_new_message',{info:info})
+                })
+                
+                socket.on('display_all_message',function(data){
+                    console.log(data);
+                    var htmlStr = '';
+                    for(var i = 0; i < data.users.length;i++){
+                        htmlStr += "<p>" + data.users[i] +": " + data.messages[i] + '</p>';
+                    }
+                    $('#chatroom').html(htmlStr);
+                })
+            })
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+        <h1>Conversation board</h1>
+            <div id="chatroom">
+                
+            </div>
+            <form>
+                <textarea rows="5" cols="157" id="message">Enter your message here</textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </body>
+</html>

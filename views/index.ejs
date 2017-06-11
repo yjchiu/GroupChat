@@ -32,7 +32,7 @@
         
                     }
                     socket.emit('got_a_new_message',{info:info});
-                    $('#message').val() = '';
+                    $('#message').val('');
                 })
 
                 socket.on('display_all_message',function(data){

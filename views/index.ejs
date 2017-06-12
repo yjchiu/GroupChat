@@ -25,15 +25,31 @@
                     alert(data.response);
                     var htmlStr = '';
                 })
-                $('form').submit(function(e){
-                    e.preventDefault();
-                    info = {
-                        name:name,
-                        message : $('#message').val()
+
+                // $('form').submit(function(e){
+                //     e.preventDefault();
+                //     info = {
+                //         name:name,
+                //         message : $('#message').val()
         
+                //     }
+                //     socket.emit('got_a_new_message',{info:info});
+                //     $('#message').val('');
+                // })
+                $('#message').keydown(function(e){
+                    if(e.keyCode == 13 && !event.shiftKey){
+                        e.preventDefault();
+                        console.log('TRUE');
+                        info = {
+                            name:name,
+                            message : $('#message').val()
+        
+                        }
+                        socket.emit('got_a_new_message',{info:info});
+                        $('#message').val('');
+                        return false;
                     }
-                    socket.emit('got_a_new_message',{info:info});
-                    $('#message').val('');
+
                 })
 
                 socket.on('display_all_message',function(data){
@@ -57,9 +73,9 @@
                 <div class="form-group">
                     <textarea id="message" class="form-control" rows="3" placeholder="Enter your message here..."></textarea>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <button class="btn btn-primary pull-right" type="submit">Send</button>
-                </div>
+                </div>-->
             </form>
         </div>
     </body>
